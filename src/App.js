@@ -3,6 +3,7 @@ import { Suspense, useState, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Sky, MapControls } from '@react-three/drei';
 import { Physics } from '@react-three/cannon';
+import { Link } from 'react-router-dom'
 
 import './App.css';
 
@@ -10,30 +11,36 @@ import Navbar from './components/Navbar';
 import Plane from './components/Plane';
 import Plot from './components/Plot';
 import Building from './components/Building';
-import Members from './components/Members.js';
+import PropertyComponent from './components/PropertyComponent';
+import PropertyListings from './components/PropertyListings';
+import BuyPropertyCard from './components/BuyPropertyCard';
+import BuyLandCard from './components/BuyLandCard';
+import House from './components/House';
 
-// Import ABI
 import Land from './abis/Land.json';
-import { setMaxListeners } from 'process';
+import Property from './abis/Property.json';
 
-function App() {
+const App = () => {
 	const [web3, setWeb3] = useState(null)
 	const [account, setAccount] = useState(null)
-	const [memberAccount, setMemberAccount] = useState(null)
 
-	// Contract & Contract States
 	const [landContract, setLandContract] = useState(null)
+	const [propertyContract, setPropertyContract] = useState(null)
 
-	const [cost, setCost] = useState(0)
-	const [buildings, setBuildings] = useState(null)
+	const [landCost, setLandCost] = useState(0)
+	const [propertyCost, setPropertyCost] = useState(0)
+	const [landParcels, setLandParcels] = useState(null)
+	const [houses, setHouses] = useState(null)
 	const [landId, setLandId] = useState(null)
 	const [landName, setLandName] = useState(null)
 	const [landOwner, setLandOwner] = useState(null)
-	const [hasOwner, setHasOwner] = useState(false)
-	const [members, setMembers] = useState(null)
-	const [memberKey, setMemberKey] = useState(null)
-	const [memberName, setMemberName] = useState(null)
-	const [memberCost, setMemberCost] = useState(0)
+	const [hasLandOwner, setHasLandOwner] = useState(false)
+	const [hasPropertyOwner, setHasPropertyOwner] = useState(false)
+	const [showListings, setShowListings] = useState(null)
+	const [showProperty, setShowProperty] = useState(false)
+	const [propertyId, setPropertyId] = useState(null)
+	const [propertyName, setPropertyName] = useState(null)
+	const [propertyOwner, setPropertyOwner] = useState(null)
 
 	const loadBlockchainData = async () => {
 		if (typeof window.ethereum !== 'undefined') {
@@ -51,22 +58,21 @@ function App() {
 			const land = new web3.eth.Contract(Land.abi, Land.networks[networkId].address)
 			setLandContract(land)
 
-			const cost = await land.methods.cost().call()
-			setCost(web3.utils.fromWei(cost.toString(), 'ether'))
+			const property = new web3.eth.Contract(Property.abi, Property.networks[networkId].address)
+			setPropertyContract(property)
 
-			const memberCost = await land.methods.memberCost().call()
-			setMemberCost(web3.utils.fromWei(memberCost.toString(), 'ether'))
+			const landCost = await land.methods.cost().call()
+			setLandCost(web3.utils.fromWei(landCost.toString(), 'ether'))
 
-			const buildings = await land.methods.getBuildings().call()
-			setBuildings(buildings)
+			const propertyCost = await property.methods.cost().call()
+			setPropertyCost(web3.utils.fromWei(propertyCost.toString(), 'ether'))
 
-			if (hasOwner === true) {
-				setLandName(buildings.name)
-				setMemberKey(members.pubkey)
-				setMemberName(members.name)
-				}
+			const landParcels = await land.methods.getBuildings().call()
+			setLandParcels(landParcels)
 
-			// Event listeners...
+			const houses = await property.methods.getBuildings().call()
+			setHouses(houses)
+
 			window.ethereum.on('accountsChanged', function (accounts) {
 				setAccount(accounts[0])
 			})
@@ -77,7 +83,6 @@ function App() {
 		}
 	}
 
-	// MetaMask Login/Connect
 	const web3Handler = async () => {
 		if (web3) {
 			const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -87,135 +92,162 @@ function App() {
 
 	useEffect(() => {
 		loadBlockchainData()
-	}, [account, memberAccount])
+	}, [account])
 
-	const buyHandler = async (_id) => {
+	const buyLandHandler = async _id => {
 		try {
 			await landContract.methods.mint(_id).send({ from: account, value: '1000000000000000000' })
 
-			const buildings = await landContract.methods.getBuildings().call()
-			setBuildings(buildings)
+			const landParcels = await landContract.methods.getBuildings().call()
+			setLandParcels(landParcels)
 
-			setLandName(buildings[_id - 1].name)
-			setLandOwner(buildings[_id - 1].owner)
-			setHasOwner(true)
-			setMembers(buildings.push(members))
-			
+			setLandName(landParcels[_id - 1].name)
+			setLandOwner(landParcels[_id - 1].owner)
+			setHasLandOwner(true)
+		} catch (error) {
+			window.alert('Error occurred when buying')
+		}
+	}
+	
+	const buyPropertyHandler = async _id => {
+		try {
+			await propertyContract.methods.mint(_id).send({ from: account, value: '5000000000000000000' })
+
+			const houses = await propertyContract.methods.getBuildings().call()
+			setHouses(houses)
+
+			setPropertyName(houses[_id - 1].name)
+			setPropertyOwner(houses[_id - 1].owner)
+			setHasPropertyOwner(true)
 		} catch (error) {
 			window.alert('Error occurred when buying')
 		}
 	}
 
-	const memberHandler = async (_id, pubkey, name) => {
-		try {
-			//await landContract.methods.mint(_id).send({ from: account, value: '1000000000000000000' })
-			await landContract.methods.memberMint(_id).send({ from: account, value: '1000000000000000000' })
-			await landContract.methods.addMemberToBuilding(pubkey, name)
-
-			const members = await landContract.methods.getMembers().call()
-
-			setMembers(members)
-			setMemberKey(members[pubkey].pubkey)
-			setMemberName(members[name].name)
-
-		} catch (error) {
-			window.alert('Error occurred when adding member')
-		}
-	}
-
 	return (
-		<div>
-			{console.log("OWNER = ", landOwner)}
-			{console.log("BUILDING = ", landName)}
-			{console.log("MEMBERS", members)}
-			{console.log("MEMBERS LIST", members)}
-			{console.log("MEMBERS KEY", memberKey)}
-			{console.log("MEMBERS NAME", memberName)}
+		<>
 			<Navbar web3Handler={web3Handler} account={account} />
-			<Canvas camera={{ position: [0, 0, 30], up: [0, 0, 1], far: 10000 }}>
+	{/* Created anonymous function to use if-else statement inside return statement. */}
+			{(() => {
+				{/* If land map btn clicked, show land map */}
+        if (showListings === 'land') {
+          return (
+			  <>
+			 <button className="button back-btn" onClick={() => setShowListings(null)}>Back To Home</button>
+            <Canvas camera={{ position: [0, 0, 30], up: [0, 0, 1], far: 10000 }}>
 				<Suspense fallback={null}>
 					<Sky distance={450000} sunPosition={[1, 10, 0]} inclination={0} azimuth={0.25} />
-
 					<ambientLight intensity={0.5} />
-
-					{/* Load in each cell */}
 					<Physics>
-						{buildings && buildings.map((building, index) => {
-							if (building.owner === '0x0000000000000000000000000000000000000000') {
+						  {/* if there's a landParcels array, map through each plot of land in array */}
+						{landParcels && landParcels.map((landParcel, index) => {
+							{/* if land parcel doesn't have an owner, return green plot */}
+							if (landParcel.owner === '0x0000000000000000000000000000000000000000') {
 								return (
 									<Plot
 										key={index}
-										position={[building.posX, building.posY, 0.1]}
-										size={[building.sizeX, building.sizeY]}
+										position={[landParcel.posX, landParcel.posY, 0.1]}
+										size={[landParcel.sizeX, landParcel.sizeY]}
 										landId={index + 1}
-										landInfo={building}
+										landInfo={landParcel}
 										setLandName={setLandName}
 										setLandOwner={setLandOwner}
-										setHasOwner={setHasOwner}
+										setHasLandOwner={setHasLandOwner}
 										setLandId={setLandId}
 									/>
 								)
+								{/* else if land parcel has an owner, return black sold plot */}
 							} else {
 								return (
 									<Building
 										key={index}
-										position={[building.posX, building.posY, 0.1]}
-										size={[building.sizeX, building.sizeY, building.sizeZ]}
+										position={[landParcel.posX, landParcel.posY, 0.1]}
+										size={[landParcel.sizeX, landParcel.sizeY, landParcel.sizeZ]}
 										landId={index + 1}
-										landInfo={building}
+										landInfo={landParcel}
 										setLandName={setLandName}
 										setLandOwner={setLandOwner}
-										setHasOwner={setHasOwner}
+										setHasLandOwner={setHasLandOwner}
 										setLandId={setLandId}
-										setMembers={setMembers}
-
 									/>
 								)
 							}
 						})}
 					</Physics>
-
 					<Plane />
 				</Suspense>
 				<MapControls />
 			</Canvas>
 
-			{landId && (
-				<div className="info">
-					<h1 className="flex">{landName}</h1>
-
-					<div className='flex-left'>
-						<div className='info--id'>
-							<h2>ID</h2>
-							<p>{landId}</p>
-						</div>
-
-						<div className='info--owner'>
-							<h2>Owner</h2>
-							<p>{landOwner}</p>
-						</div>
-
-						{!hasOwner && (
-							<div className='info--owner'>
-								<h2>Cost</h2>
-								<p>{`${cost} ETH`}</p>
-							</div>
-						)}
-					</div>
-
-					{!hasOwner && (
-						<>
-						<button onClick={() => buyHandler(landId)} className='button info--buy'>Buy Property</button>
-						</>
-					)}
-					{hasOwner && (
-						<>
-						<button onClick={() => memberHandler(landId)} className='button member--buy'>Become A Member</button>
-						</>
-					)}
-				</div>
-			)}
+			<BuyLandCard showListings={showListings}
+					landId={landId}
+					landOwner={landOwner}
+					landName={landName}
+					hasLandOwner={hasLandOwner}
+					landCost={landCost}
+					buyLandHandler={buyLandHandler}
+					/>
+			</>
+          )
+		  {/* Else if property listings btn clicked, show list of properties */}
+        } else if (showListings === 'properties') {
+			return (
+				<>
+				<div className="back-btn-container">
+				 <button className="button back-btn" onClick={() => setShowListings(false)}>Back to Home</button>
+				 </div>
+				 <ul id="propertyListings">
+					 {/* if there's a houses array, map through each house in array */}
+					 {console.log(houses)}
+					  {houses && houses.map((house, index) => {
+						  if (house.owner === '0x0000000000000000000000000000000000000000') {
+							  return (
+								  <House 
+								   key={index}
+								   propertyId={index + 1}
+								   setShowProperty={setShowProperty}
+								   propertyInfo={house}
+								   propertyName={propertyName}
+								   setPropertyName={setPropertyName}
+								   setPropertyOwner={setPropertyOwner}
+								   setHasPropertyOwner={setHasPropertyOwner}
+								   setPropertyId={setPropertyId} />
+							  )
+						  }
+					  })}
+					  </ul>
+					  </>
+			)
+          return (
+			  <>
+			    {showProperty && (
+					<>
+				<PropertyComponent setShowProperty={setShowProperty} /> 
+				<BuyPropertyCard showListings={showListings}
+				propertyId={propertyId}
+				propertyOwner={propertyOwner}
+				propertyName={propertyName}
+				hasPropertyOwner={hasPropertyOwner}
+				propertyCost={propertyCost}
+				buyPropertyHandler={buyPropertyHandler}
+				/>
+				</>
+			)}		
+				</>
+          )
+        } else {
+          return (
+			  <>
+			<h1 id="app-title">Decentrahomes</h1>
+			<div id="land-property-buttons-container">
+			<button id="landmap-btn" onClick={() => setShowListings('land')}>View Land Map</button>
+			<button id="properties-btn" onClick={() => setShowListings('properties')}>View Property Listings</button>
 		</div>
+		</>
+          )
+        }
+      })()}
+		</>
 	);
 }
 

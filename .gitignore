@@ -11,6 +11,10 @@
 # production
 /build
 
+# additional code
+/src/App1.js
+/src/contracts/Land1.sol
+
 # misc
 .DS_Store
 .env.local

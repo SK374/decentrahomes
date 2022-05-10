@@ -7,7 +7,6 @@ contract Land is ERC721 {
     uint256 public cost = 1 ether;
     uint256 public maxSupply = 5;
     uint256 public totalSupply = 0;
-    uint256 public memberCost = 1 ether;
 
     struct Building {
         string name;
@@ -18,39 +17,31 @@ contract Land is ERC721 {
         uint256 sizeX;
         uint256 sizeY;
         uint256 sizeZ;
-    
-    }
-
-    struct Member {
-        address pubkey;
-        string name;
     }
 
     Building[] public buildings;
-    Member[] public members;
 
     constructor(
         string memory _name,
         string memory _symbol,
-        uint256 _cost,
-        uint256 _memberCost
+        uint256 _cost
     ) ERC721(_name, _symbol) {
         cost = _cost;
-        memberCost = _memberCost;
 
         buildings.push(
-            Building("Sports Complex", address(0x0), 0, 0, 0, 10, 10, 10)
-        );
-        buildings.push(Building("Stadium", address(0x0), 0, 10, 0, 10, 5, 3)
+            Building("Plot 1", address(0x0), 0, 0, 0, 10, 10, 10)
         );
         buildings.push(
-            Building("University", address(0x0), 0, -10, 0, 10, 5, 3)
+            Building("Plot 2", address(0x0), 0, 10, 0, 10, 5, 3)
         );
         buildings.push(
-            Building("Tech Hub", address(0x0), 10, 0, 0, 5, 25, 5)
+            Building("Plot 3", address(0x0), 0, -10, 0, 10, 5, 3)
         );
         buildings.push(
-            Building("Shopping Plaza", address(0x0), -10, 0, 0, 5, 25, 5)
+            Building("Plot 4", address(0x0), 10, 0, 0, 5, 25, 5)
+        );
+        buildings.push(
+            Building("Plot 5", address(0x0), -10, 0, 0, 5, 25, 5)
         );
     }
 
@@ -64,13 +55,6 @@ contract Land is ERC721 {
         buildings[_id - 1].owner = msg.sender;
         totalSupply = totalSupply + 1;
 
-        _safeMint(msg.sender, _id);
-    }
-
-    function memberMint(uint256 _id) public payable {
-        require(buildings[_id - 1].owner != address(0x0));
-        require(msg.value >= memberCost);
-        
         _safeMint(msg.sender, _id);
     }
 
@@ -115,18 +99,4 @@ contract Land is ERC721 {
     function getBuilding(uint256 _id) public view returns (Building memory) {
         return buildings[_id - 1];
     }
-
-    function getOwnedBuildings(uint256 _id) public view returns (Building memory) {
-        require(buildings[_id - 1].owner != address(0x0), "This building is not yet open to members");
-        return buildings[_id - 1];             
-    }
-    
-    function addMemberToBuilding(address pubkey, string memory name, Member memory) public payable {
-        Member memory newMember = Member(pubkey, name);
-        members.push(newMember);
-    }
-
-    function getMembers() public view returns (Member[] memory) {
-        return members;
-    }
-    }
+}

@@ -20,7 +20,6 @@ body,
   /* overflow: hidden; */
   background: #272727;
 }
-
 body {
   color: #E0F1FF;
   font-family: "Rubik", -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, ubuntu, roboto, noto,
@@ -37,7 +36,7 @@ h1 {
 }
 
 nav {
-  background-color: rgba(32, 32, 46, 0.9);
+  background-color: rgba(46, 46, 61, 0.9);
 
   position: absolute;
   top: 0;
@@ -73,12 +72,12 @@ a {
   text-decoration: none;
 }
 
-.button {
+.button, .buy-card-sold p {
   display: inline-block;
   padding: 0.75em 1.75em;
   margin: .5em 0;
 
-  background: #1D8482;
+  background: #006A71;
   color: #E0F1FF;
 
   border: none;
@@ -93,22 +92,36 @@ a {
 }
 
 .button:hover {
-  background: #3586C6;
+  background: #01575e;
   color: #E0F1FF;
+}
+
+.buy-card-sold {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 0px !important;
+}
+.buy-card-sold p {
+  width: 150px;
+  text-align: center;
 }
 
 .info {
   position: absolute;
 	bottom: 0;
-	right: 0;
+  left: 0;
   z-index: 1;
-
-	background-color: rgba(32, 32, 46, 0.9);
-
+  margin: 0;
+	background-color: rgba(46, 46, 61, 0.9);
 	width: 500px;
 	height: 250px;
-
   padding: 0.25em 2em;
+}
+#buy-land-card {
+  left: auto;
+  right: 0;
 }
 
 .info--owner {
@@ -129,4 +142,148 @@ a {
   align-items: center;
   margin: 0.50em auto;
 
+}
+
+#land-property-buttons-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 17em;
+}
+
+#land-property-buttons-container button {
+  font-size: 22px;
+  height: 200px;
+  width: 500px;
+  background-color: #68abb3;
+  border: none;
+  border-radius: 5px;
+}
+
+#land-property-buttons-container #landmap-btn {
+  margin-right: 40px;
+}
+
+#land-property-buttons-container #properties-btn {
+  margin-left: 40px;
+}
+
+#app-title {
+  text-align: center;
+  margin-top: 140px;
+}
+
+canvas {
+  background-color: rgba(32, 32, 46, 0.9);
+}
+
+.showLandMap {
+  display: block;
+}
+
+.hideLandMap {
+  display: none;
+}
+
+.nav-title {
+  font-weight: bold;
+}
+
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.zoom-wrapper {
+  position: absolute;
+  right: 50px;
+  bottom: 2px;
+  text-align: center;
+  z-index: 5;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.zoom-bar {
+  color: #fff;
+  margin: 0 5px;
+  pointer-events: all;
+  text-align: center;
+}
+
+.zoom-button {
+  align-items: center;
+  justify-content: center;
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+  width: 100px;
+  height: 28px;
+  padding: 10px;
+  border-bottom: 1px solid rgba(34, 34, 34, 0);
+  outline: none;
+}
+
+#zoom-out {
+margin-right: 10px;
+}
+
+.zoom-button button {
+  background-color: none;
+}
+
+#container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.property-card {
+  position: absolute;
+  justify-content: start;
+  padding: 20px 0 0 20px;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.property-card p {
+text-align: left;
+}
+
+.new-buy-button-container {
+  display: flex;
+}
+
+.back-to-map {
+margin-top: 50px;
+}
+
+#propertyListings {
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  margin-top: 100px;
+  text-align: left;
+}
+
+#propertyListings hr {
+  width: 50%;
+}
+.back-btn {
+  margin-top: 100px;
+  margin-left: 20px;
+}
+
+#property-buy-btn {
+  display: flex;
+  justify-content: space-between;
+}
+
+.back-btn-container {
+  display: flex;
+  width: 100%;
 }

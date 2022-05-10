@@ -1,9 +1,8 @@
 const Navbar = ({ web3Handler, account }) => {
     return (
-        <nav className="flex-between">
-            <div className="metaverse_name">
-                Metaverse Buildings
-                </div>
+        <nav className="flex-between nav-title">
+                Decentrahomes
+
             {account ? (
                 <a
                     href={`${""}/address/${account}`}

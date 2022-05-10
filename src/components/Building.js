@@ -5,7 +5,7 @@ import { useLoader } from '@react-three/fiber';
 import MetalMap from '../assets/MetalMap.png';
 import MetalNormalMap from '../assets/MetalNormalMap.png';
 
-const Building = ({ position, size, landId, landInfo, setLandName, setLandOwner, setHasOwner, setLandId }) => {
+const Building = ({ position, size, landId, landInfo, setLandName, setLandOwner, setHasLandOwner, setLandId }) => {
     const [surface, color] = useLoader(TextureLoader, [MetalNormalMap, MetalMap])
 
     const clickHandler = () => {
@@ -14,10 +14,10 @@ const Building = ({ position, size, landId, landInfo, setLandName, setLandOwner,
 
         if (landInfo.owner === '0x0000000000000000000000000000000000000000') {
             setLandOwner('No Owner')
-            setHasOwner(false)
+            setHasLandOwner(false)
         } else {
             setLandOwner(landInfo.owner)
-            setHasOwner(true)
+            setHasLandOwner(true)
         }
     }
 
