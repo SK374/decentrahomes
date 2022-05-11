@@ -240,8 +240,8 @@ margin-right: 10px;
 .property-card {
   position: absolute;
   justify-content: start;
-  padding: 20px 0 0 20px;
-  width: 50%;
+  padding: 40px 0 0 40px;
+  width: 40%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;

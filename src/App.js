@@ -193,6 +193,8 @@ const App = () => {
         } else if (showListings === 'properties') {
 			return (
 				<>
+				{!showProperty &&
+				<>
 				<div className="back-btn-container">
 				 <button className="button back-btn" onClick={() => setShowListings(false)}>Back to Home</button>
 				 </div>
@@ -217,12 +219,11 @@ const App = () => {
 					  })}
 					  </ul>
 					  </>
-			)
-          return (
-			  <>
+				}
 			    {showProperty && (
-					<>
-				<PropertyComponent setShowProperty={setShowProperty} /> 
+					<> 
+				<PropertyComponent setShowProperty={setShowProperty} />
+				
 				<BuyPropertyCard showListings={showListings}
 				propertyId={propertyId}
 				propertyOwner={propertyOwner}

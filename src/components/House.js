@@ -16,7 +16,7 @@ const House = ({setShowProperty, propertyId, propertyInfo, propertyName, setProp
 
     return (
         <li onClick={() => clickHandler()}
-          >{propertyName}house</li>
+          >{propertyName}</li>
     );
 }
 
