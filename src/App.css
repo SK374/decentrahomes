@@ -269,8 +269,11 @@ margin-top: 50px;
   margin-top: 100px;
   text-align: left;
 }
-
-#propertyListings hr {
+#propertyListings h1 {
+  margin-bottom: 70px;
+}
+  
+  #propertyListings hr {
   width: 50%;
 }
 .back-btn {

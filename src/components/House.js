@@ -1,6 +1,4 @@
-const House = ({setShowProperty, propertyId, propertyInfo, propertyName, setPropertyName, setPropertyOwner, 
-    setHasPropertyOwner, setPropertyId }) => {
-    setPropertyName(propertyInfo.name)
+const House = ({setShowProperty, propertyId, propertyInfo, setPropertyOwner, setHasPropertyOwner, setPropertyId }) => {
     const clickHandler = () => {
         setPropertyId(propertyId)
 
@@ -16,7 +14,8 @@ const House = ({setShowProperty, propertyId, propertyInfo, propertyName, setProp
 
     return (
         <li onClick={() => clickHandler()}
-          >{propertyName}</li>
+          ><h3>{propertyInfo.name}</h3></li>
+          
     );
 }
 

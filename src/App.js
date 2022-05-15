@@ -199,8 +199,9 @@ const App = () => {
 				 <button className="button back-btn" onClick={() => setShowListings(false)}>Back to Home</button>
 				 </div>
 				 <ul id="propertyListings">
+					 <h1>Property Listings</h1>
 					 {/* if there's a houses array, map through each house in array */}
-					 {console.log(houses)}
+					 {console.log(houses.name)}
 					  {houses && houses.map((house, index) => {
 						  if (house.owner === '0x0000000000000000000000000000000000000000') {
 							  return (
