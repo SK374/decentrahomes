@@ -1,6 +1,6 @@
 import React, { useLayoutEffect } from "react";
 import { init, animate } from "./piano";
-import '../App.css'
+import '../../App.css'
 
 const PropertyComponent = ({setShowProperty}) => {
 

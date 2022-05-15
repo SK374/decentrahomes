@@ -7,15 +7,14 @@ import { Link } from 'react-router-dom'
 
 import './App.css';
 
-import Navbar from './components/Navbar';
-import Plane from './components/Plane';
-import Plot from './components/Plot';
-import Building from './components/Building';
-import PropertyComponent from './components/PropertyComponent';
-import PropertyListings from './components/PropertyListings';
-import BuyPropertyCard from './components/BuyPropertyCard';
-import BuyLandCard from './components/BuyLandCard';
-import House from './components/House';
+import Navbar from './components/core/Navbar';
+import Plane from './components/land/Plane';
+import Plot from './components/land/Plot';
+import Building from './components/land/Building';
+import PropertyComponent from './components/property/PropertyComponent';
+import BuyPropertyCard from './components/property/BuyPropertyCard';
+import BuyLandCard from './components/land/BuyLandCard';
+import House from './components/property/House';
 
 import Land from './abis/Land.json';
 import Property from './abis/Property.json';

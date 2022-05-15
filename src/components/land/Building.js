@@ -2,8 +2,8 @@ import { TextureLoader } from 'three';
 import { useLoader } from '@react-three/fiber';
 
 // Import Assets
-import MetalMap from '../assets/MetalMap.png';
-import MetalNormalMap from '../assets/MetalNormalMap.png';
+import MetalMap from '../../assets/MetalMap.png';
+import MetalNormalMap from '../../assets/MetalNormalMap.png';
 
 const Building = ({ position, size, landId, landInfo, setLandName, setLandOwner, setHasLandOwner, setLandId }) => {
     const [surface, color] = useLoader(TextureLoader, [MetalNormalMap, MetalMap])
