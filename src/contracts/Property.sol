@@ -11,6 +11,8 @@ contract Property is ERC721 {
     struct Building {
         string name;
         address owner;
+        string streetName;
+        string postcode;
     }
 
     Building[] public buildings;
@@ -23,9 +25,9 @@ contract Property is ERC721 {
         cost = _cost;
 
 
-        buildings.push(Building('Rosedale House', address(0x0)));
-        buildings.push(Building('Oakview', address(0x0)));
-        buildings.push(Building('Coxes Meadow', address(0x0)));
+        buildings.push(Building('Rosedale House', address(0x0), 'Elm Street', 'E31 0PB'));
+        buildings.push(Building('Oakview', address(0x0), 'Elderberry Lane', 'WC2 1FL'));
+        buildings.push(Building('Coxes Meadow', address(0x0), 'Queen Street', 'WB7 3SE'));
     }
 
     function mint(uint256 _id) public payable {

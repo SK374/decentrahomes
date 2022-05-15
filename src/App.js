@@ -40,6 +40,7 @@ const App = () => {
 	const [propertyId, setPropertyId] = useState(null)
 	const [propertyName, setPropertyName] = useState(null)
 	const [propertyOwner, setPropertyOwner] = useState(null)
+	const [query, setQuery] = useState("")
 
 	const loadBlockchainData = async () => {
 		if (typeof window.ethereum !== 'undefined') {
@@ -192,16 +193,19 @@ const App = () => {
         } else if (showListings === 'properties') {
 			return (
 				<>
-				{!showProperty &&
+				 {/* If not showing individual property, show list of properties. */}
+				{!showProperty && 
 				<>
 				<div className="back-btn-container">
-				 <button className="button back-btn" onClick={() => setShowListings(false)}>Back to Home</button>
-				 </div>
+				 <button className="button back-btn" onClick={() => setShowListings(false)}>Back to Home</button>	
+				 <div className="search_filter">
+						<input type="text" placeholder="Search postcode" className="search" onChange={e=> setQuery(e.target.value)}/>
+						</div>		
+				 </div>	
 				 <ul id="propertyListings">
 					 <h1>Property Listings</h1>
-					 {/* if there's a houses array, map through each house in array */}
-					 {console.log(houses.name)}
-					  {houses && houses.map((house, index) => {
+					 {/* if there's a houses array, map through each house in array */}				
+					  {houses && houses.filter(house=>house.postcode.includes(query)).map((house, index) => {
 						  if (house.owner === '0x0000000000000000000000000000000000000000') {
 							  return (
 								  <House 
@@ -213,7 +217,8 @@ const App = () => {
 								   setPropertyName={setPropertyName}
 								   setPropertyOwner={setPropertyOwner}
 								   setHasPropertyOwner={setHasPropertyOwner}
-								   setPropertyId={setPropertyId} />
+								   setPropertyId={setPropertyId} 
+								   />
 							  )
 						  }
 					  })}
